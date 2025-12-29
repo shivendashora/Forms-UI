@@ -31,6 +31,7 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
     const [createdForms, setCreatedForms] = useState<CreatedFormData[]>([]);
     const [filledForms, setFilledForms] = useState<FilledFormData[]>([]);
     const [allCreatedForms, setAllCreatedForms] = useState<CreatedFormData[]>([]);
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
     const router = useRouter()
 
 
@@ -59,7 +60,7 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
     const fetchCreatedForms = async () => {
         if (!userId) return;
 
-        const response = await fetchWithLoader("http://localhost:3000/dashboard/get-forms", {
+        const response = await fetchWithLoader(`${API_URL}/dashboard/get-forms`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: userId }),
@@ -81,7 +82,7 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
     const fetchFilledForms = async () => {
         if (!userId) return;
 
-        const response = await fetchWithLoader("http://localhost:3000/dashboard/get-filled-forms", {
+        const response = await fetchWithLoader(`${API_URL}/dashboard/get-filled-forms`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id: userId }),
@@ -103,7 +104,7 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
     }
     const handleDeleteForm = async (formId: number) => {
     try {
-        const res = await fetch(`http://localhost:3000/forms/delete-form/${formId}`, {
+        const res = await fetch(`${API_URL}/forms/delete-form/${formId}`, {
             method: "DELETE",
         });
         if (!res.ok) throw new Error("Failed to delete form");

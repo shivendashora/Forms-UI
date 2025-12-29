@@ -24,6 +24,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [responseMessage, setResponseMessage] = useState<string | null>(null)
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
     const router = useRouter()
 
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
             password: password,
             email: email
         }
-        const response = await fetchWithLoader("http://localhost:3000/login/register-user", {
+        const response = await fetchWithLoader(API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -53,7 +54,7 @@ export default function LoginPage() {
                 password: password,
             };
 
-            const response = await fetchWithLoader("http://localhost:3000/login/login-user", {
+            const response = await fetchWithLoader(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),

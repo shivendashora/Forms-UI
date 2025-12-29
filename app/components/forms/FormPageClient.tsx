@@ -15,6 +15,7 @@ export default function FormPageClient() {
   const [saveClicked, setSaveClicked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     if (formId) {
@@ -32,7 +33,7 @@ export default function FormPageClient() {
 
   const fetchFormForEdit = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:3000/forms/${id}`);
+      const res = await fetch(`${API_URL}/forms/${id}`);
       if (!res.ok) throw new Error("Failed to fetch form");
 
       const data = await res.json();

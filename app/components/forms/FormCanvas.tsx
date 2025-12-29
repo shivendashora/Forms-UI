@@ -15,6 +15,7 @@ export default function FormCanvas({
     formId
 }: Readonly<FormCanvasProps>) {
     const [userId, setUserId] = useState<number | null>(null);
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
     const removeTool = (id: string) => {
         setSelectedTool(prev => prev.filter(tool => tool.id !== id));
@@ -83,7 +84,7 @@ export default function FormCanvas({
         console.log("SAVE/UPDATE PAYLOAD:", payload);
 
         try {
-            const res = await fetchWithLoader("http://localhost:3000/forms/save", {
+            const res = await fetchWithLoader(`${API_URL}/forms/save`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
