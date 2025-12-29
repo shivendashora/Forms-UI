@@ -19,7 +19,7 @@ export default function VerticalOptionViewer({ setSelectedTool }: any) {
           <Button
             className="bg-blue-600 text-white w-full h-[60px]"
             onClick={() =>
-              setSelectedTool(prev => [
+              setSelectedTool((prev: any) => [
                 ...prev,
                 {
                   id: crypto.randomUUID(),
