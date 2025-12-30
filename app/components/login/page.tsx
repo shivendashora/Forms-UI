@@ -35,7 +35,7 @@ export default function LoginPage() {
             password: password,
             email: email
         }
-        const response = await fetchWithLoader(API_URL, {
+        const response = await fetchWithLoader(`${API_URL}/login/register-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -43,7 +43,6 @@ export default function LoginPage() {
             body: JSON.stringify(payload),
         });
 
-        console.log(response)
 
     }
 
@@ -54,7 +53,7 @@ export default function LoginPage() {
                 password: password,
             };
 
-            const response = await fetchWithLoader(API_URL, {
+            const response = await fetchWithLoader(`${API_URL}/login/login-user`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
