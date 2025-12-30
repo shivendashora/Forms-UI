@@ -15,7 +15,7 @@ export default function FormCanvas({
     formId
 }: Readonly<FormCanvasProps>) {
     const [userId, setUserId] = useState<number | null>(null);
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
     const removeTool = (id: string) => {
         setSelectedTool(prev => prev.filter(tool => tool.id !== id));
