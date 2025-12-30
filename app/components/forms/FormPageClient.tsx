@@ -15,7 +15,7 @@ export default function FormPageClient() {
   const [saveClicked, setSaveClicked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
     if (formId) {

@@ -24,7 +24,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [responseMessage, setResponseMessage] = useState<string | null>(null)
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     const router = useRouter()
 
 
