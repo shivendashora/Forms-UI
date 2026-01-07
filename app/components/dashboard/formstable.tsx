@@ -123,8 +123,8 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
 
 
     return (
-        <div className="overflow-x-auto overflow-y-auto ">
-            <Table className="bg-gray-600">
+        <div className="overflow-x-auto overflow-y-auto overflow-y-auto max-h-[400px] ">
+            <Table className="bg-gray-600 ">
                 <TableHeader>
                     <TableRow>
                         {activeTab === "created" ? (
