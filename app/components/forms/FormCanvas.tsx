@@ -5,6 +5,7 @@ import MultipleChoice from "./MultipleChoice";
 import { FormCanvasProps } from "./types/form-builder";
 import { Trash2 } from "lucide-react";
 import { fetchWithLoader } from "@/app/utils/fetchWithLoader";
+import { useSaveStore } from "@/app/store/saveState";
 
 export default function FormCanvas({
     selectedTool,
@@ -12,16 +13,20 @@ export default function FormCanvas({
     setSaveClicked,
     saveClicked,
     setIsSaved,
-    formId
+    formId,
+    mode
 }: Readonly<FormCanvasProps>) {
     const [userId, setUserId] = useState<number | null>(null);
+    const [answers, setAnswers] = useState<any>([])
+    const save = useSaveStore((state) => state.save)
+    const setSave = useSaveStore((state) => state.setSaveState)
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 
     const removeTool = (id: string) => {
         setSelectedTool(prev => prev.filter(tool => tool.id !== id));
     };
 
-    // Get user ID
     useEffect(() => {
         const userCredentials = localStorage.getItem("UserCredentials");
         if (!userCredentials) return;
@@ -30,8 +35,7 @@ export default function FormCanvas({
     }, []);
 
     const generateSavePayload = async () => {
-        if (!saveClicked) return;
-        if (!userId) return;
+        // if (!userId) return;
         if (!selectedTool.length) return;
 
         const headingTool = selectedTool.find(
@@ -49,6 +53,7 @@ export default function FormCanvas({
             .map((tool, index) => {
                 if (tool.type === "Input-Question") {
                     return {
+                        id: tool.qId ?? undefined, 
                         question: tool.value || "",
                         order: index + 1,
                         answerTypeId: 2,
@@ -58,11 +63,13 @@ export default function FormCanvas({
 
                 if (tool.type === "Multiplle-Choice-Question") {
                     return {
+                        id: tool.qId ?? undefined, 
                         question: tool.value || "",
                         order: index + 1,
                         answerTypeId: 1,
                         options:
                             tool.options?.map((opt, optIndex) => ({
+                                id: opt.id ?? undefined, 
                                 value: opt.value,
                                 order: optIndex + 1,
                             })) || [],
@@ -73,15 +80,15 @@ export default function FormCanvas({
             })
             .filter(Boolean);
 
+
         const payload = {
             formId: Number(formId) || undefined,
             title,
             status: "active",
             createdById: userId,
             questions,
+            answers
         };
-
-        console.log("SAVE/UPDATE PAYLOAD:", payload);
 
         try {
             const res = await fetchWithLoader(`${API_URL}/forms/save`, {
@@ -95,14 +102,19 @@ export default function FormCanvas({
             await res.json();
             setIsSaved(true);
             setSaveClicked(false);
+            setSave(false)
         } catch (err) {
+            setSave(false)
             console.error(err);
         }
     };
 
     useEffect(() => {
+        if (!saveClicked && !save) return;
+
         generateSavePayload();
-    }, [saveClicked]);
+    }, [saveClicked, save]);
+
 
     const updateToolValue = (toolId: string, value: string) => {
         setSelectedTool(prevTools => {
@@ -114,6 +126,36 @@ export default function FormCanvas({
             });
             return updatedTools;
         });
+    };
+
+    const updateAnsforQuestion = (
+        questionId: number | undefined,
+        answer: string | string[]
+    ) => {
+        if (!questionId) return;
+
+
+        setAnswers((prev: any[]) => {
+            const existing = prev.find(a => a.questionId === questionId);
+
+            if (existing) {
+                return prev.map(a =>
+                    a.questionId === questionId
+                        ? { ...a, answer }
+                        : a
+                );
+            }
+
+            return [...prev, { questionId, answer }];
+        });
+
+        setSelectedTool((prev: any[]) =>
+            prev.map(t =>
+                t.qId === questionId
+                    ? { ...t, answer }
+                    : t
+            )
+        );
     };
 
 
@@ -140,6 +182,7 @@ export default function FormCanvas({
                             placeholder="Heading"
                             value={tool.value || ""}
                             onChange={(e) => updateToolValue(tool.id, e.target.value)}
+                            disabled={mode === "share"}
                         />
                     )}
 
@@ -151,11 +194,13 @@ export default function FormCanvas({
                                 className="border-b border-gray-600 p-1 rounded text-sm outline-none"
                                 value={tool.value || ""}
                                 onChange={(e) => updateToolValue(tool.id, e.target.value)}
+                                disabled={mode === "share"}
                             />
                             <textarea
                                 placeholder="Answer will go here"
                                 className="text-sm rounded bg-gray-100 h-[180px]"
-                                disabled
+                                disabled={mode !== "share"}
+                                onChange={(e) => updateAnsforQuestion(tool.qId, e.target.value)}
                             />
                         </div>
                     )}
@@ -165,6 +210,8 @@ export default function FormCanvas({
                         <MultipleChoice
                             tool={tool}
                             setSelectedTool={setSelectedTool}
+                            mode={mode}
+                            updateAnsforQuestion={updateAnsforQuestion}
                         />
                     )}
                 </div>

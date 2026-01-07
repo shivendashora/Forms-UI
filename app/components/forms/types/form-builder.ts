@@ -5,6 +5,7 @@ export interface FormCanvasProps {
   setIsSaved:(save:boolean) => void,
   formId?:string|null
   setSelectedTool: React.Dispatch<React.SetStateAction<ToolItem[]>>;
+  mode?:string
 };
 
 
@@ -16,9 +17,8 @@ export interface MCQOption {
 export interface ToolItem {
   id: string;
   type: "Heading" | "Input-Question" | "Multiplle-Choice-Question";
-
+  qId?:number;
   value?: string; 
-
   options?: MCQOption[];
 }
 

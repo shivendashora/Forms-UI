@@ -18,6 +18,7 @@ interface CreatedFormData {
     formName: string;
     createdAt: string;
     status: string;
+    shareAvailable:boolean
 }
 
 interface FilledFormData {
@@ -72,10 +73,11 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
             formName: form.title,
             createdAt: new Date(form.createdAt).toLocaleDateString(),
             status: form.status,
+            shareAvailable:form.shareAvailable
         }));
 
-        setAllCreatedForms(mapped); // Keep backup
-        setCreatedForms(mapped);    // Rendered list
+        setAllCreatedForms(mapped); 
+        setCreatedForms(mapped);    
     };
 
 
@@ -98,6 +100,11 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
 
         setFilledForms(mapped);
     };
+
+
+    const handleShare=(formId:number)=>{
+        console.log("Share handled",formId)
+    }
 
     const handleEditButton = (formId: number) => {
         router.push(`/forms?formId=${formId}`);
@@ -164,6 +171,9 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
                                     <div className="flex gap-2 items-center justify-center">
                                         <Button size="sm" variant="outline" className=" text-white cursor-pointer bg-gray-800" onClick={() => handleEditButton(form.id)}>Edit</Button>
                                         <Button size="sm" variant="destructive" className="text-white cursor-pointer bg-gray-800" onClick={()=>handleDeleteForm(form.id)}>Delete</Button>
+                                        {
+                                            form.shareAvailable && <Button size="sm" variant="outline" className="text-white cursor-pointer bg-gray-800" onClick={()=>handleShare(form.id)}> Share</Button>
+                                        }
                                     </div>
                                 </TableCell>
                             </TableRow>
