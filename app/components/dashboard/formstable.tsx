@@ -103,7 +103,7 @@ export default function FormsTable({ activeTab, userId, search }: Readonly<Forms
 
 
     const handleShare=(formId:number)=>{
-        console.log("Share handled",formId)
+        router.push(`/share/${formId}`);
     }
 
     const handleEditButton = (formId: number) => {
