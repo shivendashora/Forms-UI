@@ -86,6 +86,7 @@ export default function FormCanvas({
             title,
             status: "active",
             createdById: userId,
+            shareAvailable:true,
             questions,
             answers
         };
