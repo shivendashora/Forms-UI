@@ -83,11 +83,7 @@ export default function ShareDialog({
     setSuccess("");
 
     try {
-      // API Payload:
-      // {
-      //   "formId": "123",
-      //   "emails": ["test@example.com", "user@example.com"]
-      // }
+      
       const response = await fetchWithLoader(`${API_URL}/forms/share`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
